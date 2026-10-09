@@ -110,7 +110,7 @@ Then in the app:
 python3 proxy_server.py --key SERP_KEY --openrouter OR_KEY --port 3000
 export SERPAPI_KEY=... OPENROUTER_API_KEY=...
 python3 proxy_server.py
-python3 launcher.py
+
 ```
 
 Keys:
