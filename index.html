@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="TD Search — Your private offline search engine" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>TD Search — Offline Search Engine</title>
+  <link rel="stylesheet" href="style.css?v=fix3" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>" />
+</head>
+<body>
+  <div id="app">
+    <!-- Animated background -->
+    <div class="bg-effects" aria-hidden="true">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+      <div class="grid-overlay"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+      <div class="header-inner">
+        <a href="#" class="logo" id="logo-btn" aria-label="TD Search Home">
+          <svg class="logo-icon" viewBox="0 0 40 40" width="36" height="36" aria-hidden="true">
+            <defs>
+              <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#38bdf8"/>
+                <stop offset="100%" stop-color="#818cf8"/>
+              </linearGradient>
+            </defs>
+            <circle cx="18" cy="18" r="12" fill="none" stroke="url(#logoGrad)" stroke-width="2.5"/>
+            <line x1="27" y1="27" x2="34" y2="34" stroke="url(#logoGrad)" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+          <span class="logo-text">TD Search</span>
+        </a>
+
+        <div class="header-search" id="header-search" hidden>
+          <div class="search-box compact">
+            <svg class="search-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/>
+              <line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <input type="search" id="header-search-input" placeholder="Search your local index..." autocomplete="off" spellcheck="false" aria-label="Search" />
+            <button type="button" class="btn-icon clear-btn" id="header-clear" hidden aria-label="Clear search">
+              <svg viewBox="0 0 24 24" width="16" height="16"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button type="button" class="btn-icon" id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+            <svg class="icon-sun" viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <svg class="icon-moon" viewBox="0 0 24 24" width="20" height="20" hidden><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+          </button>
+          <button type="button" class="btn-icon" id="settings-btn" aria-label="Settings" title="Settings">
+            <svg viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </button>
+          <button type="button" class="btn-icon" id="import-btn" aria-label="Import HTML files" title="Import HTML files">
+            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 3v12M8 11l4 4 4-4M4 19h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Home View -->
+    <main class="home-view" id="home-view">
+      <div class="home-content">
+        <div class="home-logo">
+          <svg viewBox="0 0 80 80" width="72" height="72" aria-hidden="true">
+            <defs>
+              <linearGradient id="homeLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#38bdf8"/>
+                <stop offset="50%" stop-color="#818cf8"/>
+                <stop offset="100%" stop-color="#c084fc"/>
+              </linearGradient>
+            </defs>
+            <circle cx="36" cy="36" r="22" fill="none" stroke="url(#homeLogoGrad)" stroke-width="3.5"/>
+            <line x1="53" y1="53" x2="68" y2="68" stroke="url(#homeLogoGrad)" stroke-width="3.5" stroke-linecap="round"/>
+          </svg>
+          <h1 class="home-title">TD Search</h1>
+          <p class="home-subtitle">Your private offline search engine</p>
+        </div>
+
+        <form class="search-form" id="search-form" role="search" action="javascript:void(0)" method="get" onsubmit="return false;">
+          <div class="search-box large" id="main-search-box">
+            <svg class="search-icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/>
+              <line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <input type="search" id="search-input" placeholder="Search your local index..." autocomplete="off" spellcheck="false" aria-label="Search query" autofocus />
+            <button type="button" class="btn-icon clear-btn" id="main-clear" hidden aria-label="Clear">
+              <svg viewBox="0 0 24 24" width="18" height="18"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+            <div class="autocomplete" id="autocomplete" hidden role="listbox"></div>
+          </div>
+          <div class="search-actions">
+            <button type="submit" class="btn btn-primary" id="search-btn">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              Search
+            </button>
+            <button type="button" class="btn btn-secondary" id="import-home-btn">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 3v12M8 11l4 4 4-4M4 19h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+              Import
+            </button>
+            <button type="button" class="btn btn-ghost" id="operators-help-btn" title="Search operators">
+              <svg viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+        </form>
+
+        <div class="stats-bar" id="stats-bar">
+          <div class="stat">
+            <span class="stat-value" id="stat-docs">0</span>
+            <span class="stat-label">Indexed documents</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat">
+            <span class="stat-value" id="stat-size">0 KB</span>
+            <span class="stat-label">Index size</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat">
+            <span class="stat-value" id="stat-updated">Never</span>
+            <span class="stat-label">Last updated</span>
+          </div>
+        </div>
+
+        <div class="recent-searches" id="recent-searches" hidden>
+          <div class="recent-header">
+            <span>Recent searches</span>
+            <button type="button" class="btn-text" id="clear-history-btn">Clear</button>
+          </div>
+          <div class="recent-list" id="recent-list"></div>
+        </div>
+
+        <!-- Empty state -->
+        <div class="empty-state" id="empty-state" hidden>
+          <svg viewBox="0 0 64 64" width="64" height="64" aria-hidden="true">
+            <rect x="8" y="12" width="48" height="40" rx="4" fill="none" stroke="currentColor" stroke-width="2"/>
+            <path d="M8 22h48M20 12v10M44 12v10" stroke="currentColor" stroke-width="2"/>
+            <circle cx="32" cy="38" r="6" fill="none" stroke="currentColor" stroke-width="2"/>
+            <line x1="36.5" y1="42.5" x2="42" y2="48" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <h2>No pages indexed yet</h2>
+          <p>Import HTML files to build your private search index.</p>
+          <button type="button" class="btn btn-primary" id="empty-import-btn">Import HTML Files</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Results View -->
+    <main class="results-view" id="results-view" hidden>
+      <div class="results-layout">
+        <aside class="sidebar" id="sidebar">
+          <div class="sidebar-section">
+            <h3 class="sidebar-title">Filters</h3>
+            <div class="filter-group" role="radiogroup" aria-label="Content type">
+              <label class="filter-option">
+                <input type="radio" name="filter-type" value="all" checked />
+                <span>All</span>
+              </label>
+              <label class="filter-option">
+                <input type="radio" name="filter-type" value="local" />
+                <span>Local index</span>
+              </label>
+              <label class="filter-option">
+                <input type="radio" name="filter-type" value="web" />
+                <span>Web (SerpAPI)</span>
+              </label>
+              <label class="filter-option">
+                <input type="radio" name="filter-type" value="demo" />
+                <span>Demo data</span>
+              </label>
+            </div>
+          </div>
+          <div class="sidebar-section">
+            <h3 class="sidebar-title">Sort by</h3>
+            <div class="filter-group" role="radiogroup" aria-label="Sort order">
+              <label class="filter-option">
+                <input type="radio" name="sort-by" value="relevance" checked />
+                <span>Relevance</span>
+              </label>
+              <label class="filter-option">
+                <input type="radio" name="sort-by" value="newest" />
+                <span>Newest</span>
+              </label>
+              <label class="filter-option">
+                <input type="radio" name="sort-by" value="oldest" />
+                <span>Oldest</span>
+              </label>
+              <label class="filter-option">
+                <input type="radio" name="sort-by" value="title" />
+                <span>Title</span>
+              </label>
+            </div>
+          </div>
+        </aside>
+
+        <div class="results-main">
+          <div class="search-tabs" id="search-tabs" role="tablist">
+            <button type="button" class="search-tab active" data-type="web" role="tab" aria-selected="true" onclick="window.__tdSetType && window.__tdSetType('web')">All</button>
+            <button type="button" class="search-tab" data-type="images" role="tab" aria-selected="false" onclick="window.__tdSetType && window.__tdSetType('images')">Images</button>
+            <button type="button" class="search-tab" data-type="videos" role="tab" aria-selected="false" onclick="window.__tdSetType && window.__tdSetType('videos')">Videos</button>
+            <button type="button" class="search-tab" data-type="news" role="tab" aria-selected="false" onclick="window.__tdSetType && window.__tdSetType('news')">News</button>
+            <button type="button" class="search-tab" data-type="maps" role="tab" aria-selected="false" onclick="window.__tdSetType && window.__tdSetType('maps')">Maps</button>
+            <button type="button" class="search-tab" data-type="ai" role="tab" aria-selected="false" onclick="window.__tdSetType && window.__tdSetType('ai')">AI</button>
+            <button type="button" class="search-tab" data-type="local" role="tab" aria-selected="false" onclick="window.__tdSetType && window.__tdSetType('local')">Local</button>
+          </div>
+          <div class="results-meta" id="results-meta">
+            <span class="mode-badge" id="mode-badge">All</span>
+            <span id="results-count">About 0 results</span>
+            <span class="results-time" id="results-time"></span>
+          </div>
+          <div class="answer-box" id="answer-box" hidden></div>
+          <div class="ai-answer" id="ai-answer" hidden></div>
+          <div class="ai-composer" id="ai-composer" hidden>
+            <textarea id="ai-chat-input" class="ai-chat-input" rows="2" placeholder="Message AI… (Enter to send, Shift+Enter for new line)"></textarea>
+            <div class="ai-composer-actions">
+              <button type="button" class="btn btn-secondary btn-sm" id="ai-clear-btn">New chat</button>
+              <button type="button" class="btn btn-primary btn-sm" id="ai-send-btn">Send</button>
+            </div>
+          </div>
+          <div class="video-grid" id="video-grid" hidden role="list"></div>
+          <div class="maps-list" id="maps-list" hidden role="list"></div>
+          <div class="results-list" id="results-list" role="list"></div>
+          <div class="image-grid" id="image-grid" hidden role="list"></div>
+          <div class="related-searches" id="related-searches" hidden></div>
+          <div class="no-results" id="no-results" hidden>
+            <svg viewBox="0 0 64 64" width="56" height="56" aria-hidden="true">
+              <circle cx="28" cy="28" r="16" fill="none" stroke="currentColor" stroke-width="2"/>
+              <line x1="40" y1="40" x2="52" y2="52" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <line x1="20" y1="28" x2="36" y2="28" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <h2>No results found</h2>
+            <ul class="suggestions">
+              <li>Check spelling</li>
+              <li>Try fewer words</li>
+              <li>Remove filters</li>
+              <li>Try another query</li>
+            </ul>
+          </div>
+          <div class="pagination" id="pagination" hidden></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Import Modal -->
+    <div class="modal-overlay" id="import-modal" hidden role="dialog" aria-modal="true" aria-labelledby="import-title">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 id="import-title">Import HTML Files</h2>
+          <button type="button" class="btn-icon modal-close" aria-label="Close">
+            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-desc">Select local HTML files to parse and add to your private search index. Scripts and styles are ignored. All data stays in this browser.</p>
+          
+          <div class="drop-zone" id="drop-zone">
+            <svg viewBox="0 0 48 48" width="48" height="48" aria-hidden="true">
+              <path d="M24 8v24M16 24l8 8 8-8M8 40h32" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            </svg>
+            <p>Drag & drop HTML files here</p>
+            <p class="drop-hint">or click to browse</p>
+            <input type="file" id="file-input" accept=".html,.htm,text/html" multiple hidden />
+          </div>
+
+          <div class="import-progress" id="import-progress" hidden>
+            <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+            <p class="progress-text" id="progress-text">Indexing...</p>
+          </div>
+
+          <div class="import-log" id="import-log" hidden></div>
+
+          <div class="import-summary" id="import-summary" hidden>
+            <div class="summary-grid">
+              <div class="summary-item"><span class="summary-value" id="sum-files">0</span><span class="summary-label">Files</span></div>
+              <div class="summary-item"><span class="summary-value" id="sum-indexed">0</span><span class="summary-label">Indexed</span></div>
+              <div class="summary-item"><span class="summary-value" id="sum-dupes">0</span><span class="summary-label">Duplicates</span></div>
+              <div class="summary-item"><span class="summary-value" id="sum-errors">0</span><span class="summary-label">Errors</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost modal-close">Cancel</button>
+          <button type="button" class="btn btn-primary" id="start-import-btn" disabled>Start Import</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settings-modal" hidden role="dialog" aria-modal="true" aria-labelledby="settings-title">
+      <div class="modal modal-wide">
+        <div class="modal-header">
+          <h2 id="settings-title">Settings</h2>
+          <button type="button" class="btn-icon modal-close" aria-label="Close">
+            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+        <div class="modal-body settings-body">
+          <section class="settings-section">
+            <h3>Theme</h3>
+            <div class="setting-row">
+              <label class="setting-label">Appearance</label>
+              <select id="setting-theme" class="setting-select">
+                <option value="system">System</option>
+                <option value="dark">Dark</option>
+                <option value="light">Light</option>
+              </select>
+            </div>
+          </section>
+
+          <section class="settings-section">
+            <h3>Search</h3>
+            <div class="setting-row">
+              <label class="setting-label">Results per page</label>
+              <select id="setting-per-page" class="setting-select">
+                <option value="10">10</option>
+                <option value="20" selected>20</option>
+                <option value="50">50</option>
+              </select>
+            </div>
+            <div class="setting-row">
+              <label class="setting-label" for="setting-highlight">Highlight matches</label>
+              <input type="checkbox" id="setting-highlight" checked class="setting-check" />
+            </div>
+            <div class="setting-row">
+              <label class="setting-label" for="setting-phrase">Exact phrase matching</label>
+              <input type="checkbox" id="setting-phrase" checked class="setting-check" />
+            </div>
+            <div class="setting-row">
+              <label class="setting-label" for="setting-fuzzy">Fuzzy matching</label>
+              <input type="checkbox" id="setting-fuzzy" class="setting-check" />
+            </div>
+            <div class="setting-row">
+              <label class="setting-label" for="setting-search-title">Search titles</label>
+              <input type="checkbox" id="setting-search-title" checked class="setting-check" />
+            </div>
+            <div class="setting-row">
+              <label class="setting-label" for="setting-search-content">Search content</label>
+              <input type="checkbox" id="setting-search-content" checked class="setting-check" />
+            </div>
+          </section>
+
+          <section class="settings-section">
+            <h3>Index</h3>
+            <div class="setting-row">
+              <span class="setting-label">Documents</span>
+              <span id="set-doc-count">0</span>
+            </div>
+            <div class="setting-row">
+              <span class="setting-label">Index size</span>
+              <span id="set-index-size">0 KB</span>
+            </div>
+            <div class="setting-actions">
+              <button type="button" class="btn btn-secondary btn-sm" id="export-index-btn">Export Index</button>
+              <button type="button" class="btn btn-secondary btn-sm" id="import-index-btn">Import Index</button>
+              <button type="button" class="btn btn-secondary btn-sm" id="rebuild-index-btn">Rebuild Index</button>
+              <button type="button" class="btn btn-danger btn-sm" id="clear-index-btn">Clear Index</button>
+            </div>
+            <input type="file" id="index-file-input" accept=".json,application/json" hidden />
+          </section>
+
+          <section class="settings-section">
+            <h3>Online Search (SerpAPI)</h3>
+            <p class="privacy-note" style="margin-bottom:0.85rem">
+              SerpAPI blocks direct browser calls (CORS). Run the local proxy first:
+              <br><code style="font-size:0.78rem">python3 proxy_server.py --key YOUR_SERPAPI_KEY</code>
+              <br>Then open <strong>http://127.0.0.1:8080</strong> (not file://).
+              The API key stays on your machine inside the proxy.
+            </p>
+            <div class="setting-row">
+              <label class="setting-label" for="setting-online-enabled">Enable online search</label>
+              <input type="checkbox" id="setting-online-enabled" class="setting-check" />
+            </div>
+            <div class="setting-row">
+              <label class="setting-label" for="setting-search-mode">Search mode</label>
+              <select id="setting-search-mode" class="setting-select">
+                <option value="local">Local only</option>
+                <option value="online">Online only (SerpAPI)</option>
+                <option value="both" selected>Local + Online</option>
+              </select>
+            </div>
+            <div class="setting-actions">
+              <button type="button" class="btn btn-secondary btn-sm" id="test-serpapi-btn">Test Proxy / API</button>
+            </div>
+            <p id="serpapi-status" style="font-size:0.8rem;color:var(--text-muted);margin-top:0.5rem"></p>
+
+            <h3 style="margin-top:1.25rem">AI Search (OpenRouter)</h3>
+            <p class="privacy-note" style="margin-bottom:0.85rem">
+              AI answers go through the same local proxy. Start proxy with your OpenRouter key:
+              <br><code style="font-size:0.78rem">python3 proxy_server.py --key SERP_KEY --openrouter OR_KEY</code>
+            </p>
+            <div class="setting-row">
+              <label class="setting-label" for="setting-ai-enabled">Enable AI tab</label>
+              <input type="checkbox" id="setting-ai-enabled" class="setting-check" />
+            </div>
+            <div class="setting-row">
+              <label class="setting-label" for="setting-or-model">Model</label>
+              <select id="setting-or-model" class="setting-select">
+                <option value="nvidia/nemotron-3.5-lightning:free">nvidia/nemotron-3.5-lightning:free</option>
+                <option value="nvidia/nemotron-3-ultra-550b-a55b:free">nvidia/nemotron-3-ultra-550b-a55b:free</option>
+                <option value="openrouter/free">openrouter/free</option>
+                <option value="openai/gpt-4o-mini">openai/gpt-4o-mini</option>
+                <option value="openai/gpt-4o">openai/gpt-4o</option>
+                <option value="anthropic/claude-3.5-sonnet">anthropic/claude-3.5-sonnet</option>
+                <option value="google/gemini-flash-1.5">google/gemini-flash-1.5</option>
+                <option value="meta-llama/llama-3.1-70b-instruct">meta-llama/llama-3.1-70b-instruct</option>
+              </select>
+            </div>
+            <p id="openrouter-status" style="font-size:0.8rem;color:var(--text-muted);margin-top:0.35rem"></p>
+          </section>
+
+          <section class="settings-section">
+            <h3>Privacy</h3>
+            <p class="privacy-note">Local index data stays inside this browser. When online search is enabled, your query and API key are sent to SerpAPI only. No analytics from this app.</p>
+          </section>
+
+          <section class="settings-section">
+            <h3>Developer</h3>
+            <div class="setting-row">
+              <label class="setting-label" for="setting-debug">Show debug info</label>
+              <input type="checkbox" id="setting-debug" class="setting-check" />
+            </div>
+            <div class="debug-panel" id="debug-panel" hidden>
+              <pre id="debug-content"></pre>
+            </div>
+          </section>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary modal-close">Done</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Operators Help Modal -->
+    <div class="modal-overlay" id="operators-modal" hidden role="dialog" aria-modal="true" aria-labelledby="ops-title">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 id="ops-title">Search Operators</h2>
+          <button type="button" class="btn-icon modal-close" aria-label="Close">
+            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <table class="ops-table">
+            <thead>
+              <tr><th>Operator</th><th>Example</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>term</code></td><td>python</td><td>Match term anywhere</td></tr>
+              <tr><td><code>"phrase"</code></td><td>"machine learning"</td><td>Exact phrase</td></tr>
+              <tr><td><code>title:</code></td><td>title:javascript</td><td>Match in title</td></tr>
+              <tr><td><code>url:</code></td><td>url:docs</td><td>Match in path/URL</td></tr>
+              <tr><td><code>site:</code></td><td>site:example.com</td><td>Match domain/path</td></tr>
+              <tr><td><code>OR</code></td><td>python OR js</td><td>Either term</td></tr>
+              <tr><td><code>AND</code></td><td>python AND tutorial</td><td>Both terms (default)</td></tr>
+              <tr><td><code>-term</code></td><td>python -java</td><td>Exclude term</td></tr>
+              <tr><td><code>-filetype:</code></td><td>-filetype:pdf</td><td>Exclude extension</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary modal-close">Got it</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+    <!-- Hidden file inputs for keyboard shortcuts -->
+    <input type="file" id="quick-file-input" accept=".html,.htm,text/html" multiple hidden />
+  </div>
+
+  <script src="data.js?v=fix3"></script>
+  <script src="parser.js?v=fix3"></script>
+  <script src="storage.js?v=fix3"></script>
+  <script src="indexer.js?v=fix3"></script>
+  <script src="search.js?v=fix3"></script>
+  <script src="crawler.js?v=fix3"></script>
+  <script src="online.js?v=fix3"></script>
+  <script src="app.js?v=fix3"></script>
+</body>
+</html>
