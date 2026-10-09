@@ -1,0 +1,44 @@
+
+  name: Build macOS App
+
+  on:
+    workflow_dispatch:
+    push:
+      branches: [main]
+
+  jobs:
+    build-macos:
+      runs-on: macos-latest
+
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+
+        - name: Set up Python
+          uses: actions/setup-python@v5
+          with:
+            python-version: "3.11"
+
+        - name: Install dependencies
+          run: |
+            python -m pip install --upgrade pip
+            python -m pip install pyinstaller
+            if [ -f requirements.txt ]; then
+              python -m pip install -r requirements.txt
+            fi
+
+        - name: Build macOS app
+          run: |
+            python -m PyInstaller --clean --windowed launcher.py
+
+        - name: Package macOS app
+          run: |
+            cd dist
+            zip -r ../TD-Search-macOS.zip launcher.app
+
+        - name: Upload macOS artifact
+          uses: actions/upload-artifact@v4
+          with:
+            name: TD-Search-macOS
+            path: TD-Search-macOS.zip
+            if-no-files-found: error
